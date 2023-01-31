@@ -2,46 +2,78 @@ const reponse = await fetch('pieces-autos.json'); //On va chercher le json
 const pieces = await reponse.json(); // On créue une constante pieces que l'on associe au résultat renvoyé par le json
 // On peut aussi utiliser const pieces = await fetch("pieces-autos.json").then(pieces => pieces.json());
 
-// pour tous les objets, on utilise un for of. On utilise aussi une fonction gernererPieces comme ça on purra la rappeler plusieurs fois pour mettre à jour la page web
-function genererPieces(pieces) {
-    for (let i = 0; i < pieces.length; i++) {
-
-        // Récupération de l'élément du DOM qui accueillera les fiches
-        const sectionFiches = document.querySelector(".fiches");
-        // Création d’une balise dédiée à une pièce automobile
-        const pieceElement = document.createElement("article");
-        // On crée l’élément img.
-        const imageElement = document.createElement("img");
-        // On accède à l’indice i de la liste pieces pour configurer la source de l’image.
-        imageElement.src = pieces[i].image;
-        // Idem pour le nom, le prix et la catégorie...
-        const nomElement = document.createElement("h2"); //On crée un nouvel élément h2
-        nomElement.innerText = pieces[i].nom;
-        const prixElement = document.createElement("p");
-        prixElement.innerText = `Prix: ${pieces[i].prix} € (${pieces[i].prix < 35 ? "€" : "€€€"})`;
-        const categorieElement = document.createElement("p");
-        categorieElement.innerText = pieces[i].categorie ?? ("aucune catégorie");
-        const descriptionElement = document.createElement("p");
-        descriptionElement.innerText = pieces[i].description ?? "Pas de description pour le moment";
-        const disponibiliteElement = document.createElement("p");
-        disponibiliteElement.innerText = pieces[i].disponibilite ? "En stock" : "Rupture de stock";
+// Pour un seul objet
 
 
-        // On rattache la balise article à la section Fiches
+// const article = pieces[0]; //On crée une const article que l'on associe à la première pièce du tableau JSON
 
-        // On rattache l’image à pieceElement (la balise article)
-        pieceElement.appendChild(imageElement);
-        // Idem pour le nom, le prix et la catégorie...
-        pieceElement.appendChild(nomElement);
-        pieceElement.appendChild(prixElement);
-        pieceElement.appendChild(categorieElement);
-        pieceElement.appendChild(descriptionElement);
-        pieceElement.appendChild(disponibiliteElement);
-               // On rattache la balise article au body
-       document.body.appendChild(pieceElement);
+// const imageElement = document.createElement("img"); //On crée un nouvel élément img
+// imageElement.src = article.image; // On modifie la source de cet élément pour ajouter l'url de l'image
+
+// const nomElement = document.createElement("h2"); //On crée un nouvel élément h2
+// nomElement.innerText = article.nom; // On y ajoute le nom de l'article
+
+// const prixElement = document.createElement("p");
+// prixElement.innerText = `Prix: ${article.prix} € (${article.prix < 35 ? "€" : "€€€"})`; // On y ajoute le texte "Prix:" puis le prix de l'article. Si le prix est inférieur à 35e on met €, sinon €€€.
+
+// const categorieElement = document.createElement("p");
+// categorieElement.innerText = article.categorie ?? "(aucune catégorie)"; // On y ajoute la catégorie, si y'en n'a pas on écrit "aucune catégorie"
+
+// const descriptionElement = document.createElement("p");
+// descriptionElement.innerText = article.description ?? "Pas de description pour le moment";
+
+// const disponibiliteElement = document.createElement("p");
+// disponibiliteElement.innerText = article.disponibilite ? "en stock" : "rupture de stock"; // Si true : en stock, si false : rupture de stock
+
+
+ // Pour faire ce rattachement, nous avons besoin d’un parent. En effet, le DOM structure les éléments sous forme d’arbre avec des enfants et des parents. 
+ //Il faut donc trouver un parent pour accueillir nos nouveaux éléments. Ainsi, nous allons utiliser la fonction appendChild en JavaScript.
+
+// const sectionFiches = document.querySelector(".fiches"); // Notre page web contient une balise section avec la classe “fiches” que nous utiliserons comme parent. Nous la récupérons grâce à querySelector
+// sectionFiches.appendChild(imageElement);
+// sectionFiches.appendChild(nomElement);
+// sectionFiches.appendChild(prixElement);
+// sectionFiches.appendChild(categorieElement);
+// sectionFiches.appendChild(descriptionElement);
+// sectionFiches.appendChild(disponibiliteElement);
+
+// pour tous les objets, on utilise un for of
+
+for (let i = 0; i < pieces.length; i++) {
+
+    // Récupération de l'élément du DOM qui accueillera les fiches
+    const sectionFiches = document.querySelector(".fiches");
+    // Création d’une balise dédiée à une pièce automobile
+    const pieceElement = document.createElement("article");
+    // On crée l’élément img.
+    const imageElement = document.createElement("img");
+    // On accède à l’indice i de la liste pieces pour configurer la source de l’image.
+    imageElement.src = pieces[i].image;
+    // Idem pour le nom, le prix et la catégorie...
+    const nomElement = document.createElement("h2"); //On crée un nouvel élément h2
+    nomElement.innerText = pieces[i].nom;
+    const prixElement = document.createElement("p");
+    prixElement.innerText = `Prix: ${pieces[i].prix} € (${pieces[i].prix < 35 ? "€" : "€€€"})`;
+    const categorieElement = document.createElement("p");
+    categorieElement.innerText = pieces[i].categorie ?? ("aucune catégorie");
+    const descriptionElement = document.createElement("p");
+    descriptionElement.innerText = pieces[i].description ?? "Pas de description pour le moment";
+    const disponibiliteElement = document.createElement("p");
+    disponibiliteElement.innerText = pieces[i].disponibilite ? "En stock" : "Rupture de stock";
+    
+    
+    // On rattache la balise article à la section Fiches
+    sectionFiches.appendChild(pieceElement);
+    // On rattache l’image à pieceElement (la balise article)
+    pieceElement.appendChild(imageElement);
+    // Idem pour le nom, le prix et la catégorie...
+    pieceElement.appendChild(nomElement);
+    pieceElement.appendChild(prixElement);
+    pieceElement.appendChild(categorieElement);
+    pieceElement.appendChild(descriptionElement);
+    pieceElement.appendChild(disponibiliteElement);
     }
-}
-genererPieces(pieces);
+
     //Trier les articles en fonction du prix du plus petit ua plus grand avec la fonction sort
 
     const boutonTrier = document.querySelector(".btn-trier");
