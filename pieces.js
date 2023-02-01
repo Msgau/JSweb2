@@ -1,3 +1,4 @@
+
 const reponse = await fetch('pieces-autos.json'); //On va chercher le json
 const pieces = await reponse.json(); // On créue une constante pieces que l'on associe au résultat renvoyé par le json
 // On peut aussi utiliser const pieces = await fetch("pieces-autos.json").then(pieces => pieces.json());
@@ -28,7 +29,7 @@ function genererPieces(pieces) {
 
 
         // On rattache la balise article à la section Fiches
-
+        sectionFiches.appendChild(pieceElement);
         // On rattache l’image à pieceElement (la balise article)
         pieceElement.appendChild(imageElement);
         // Idem pour le nom, le prix et la catégorie...
@@ -37,11 +38,12 @@ function genererPieces(pieces) {
         pieceElement.appendChild(categorieElement);
         pieceElement.appendChild(descriptionElement);
         pieceElement.appendChild(disponibiliteElement);
-               // On rattache la balise article au body
-       document.body.appendChild(pieceElement);
     }
 }
+// On lance la fonction pour afficher la page
 genererPieces(pieces);
+
+
     //Trier les articles en fonction du prix du plus petit ua plus grand avec la fonction sort
 
     const boutonTrier = document.querySelector(".btn-trier");
@@ -51,6 +53,9 @@ genererPieces(pieces);
             return a.prix - b.prix; // Fonction anonyme
         });
         console.log(piecesOrdonnees);
+        // Effacement de l'écran et regénération de la page
+  document.querySelector(".fiches").innerHTML = "";
+  genererPieces(piecesOrdonnees);
     });
     // Trier par ordre décroissant
 
@@ -61,6 +66,9 @@ genererPieces(pieces);
             return b.prix - a.prix; // Fonction anonyme
         });
         console.log(piecesOrdonnees);
+        // Effacement de l'écran et regénération de la page
+  document.querySelector(".fiches").innerHTML = "";
+  genererPieces(piecesOrdonnees);
     });
 
     // Filtrer les pièces non abordables avec la fonction filter
@@ -72,6 +80,23 @@ genererPieces(pieces);
            return piece.prix <= 35; // On retourne uniquement les éléments qui ont un prix <= 35
        });
        console.log(piecesFiltrees);
+       // Effacement de l'écran et regénération de la page
+  document.querySelector(".fiches").innerHTML = "";
+  genererPieces(piecesFiltrees);
+    });
+
+    const rangeFiltrer = document.querySelector(".prixMax");
+
+    rangeFiltrer.addEventListener("input", function () {
+       const piecesFiltrees = pieces.filter(function (piece) { // Pas besoin de créer une copie car la fonction filter le fait pour nous.
+           return piece.prix <= rangeFiltrer.value; // On retourne uniquement les éléments qui ont un prix <= rangefilter
+       });
+       console.log(piecesFiltrees);
+       // Effacement de l'écran et regénération de la page
+  document.querySelector(".fiches").innerHTML = "";
+  genererPieces(piecesFiltrees);
+  document.querySelector(".fef").innerText = `${rangeFiltrer.value} €`;
+
     });
 
     // Filtrer les pièces qui n'ont pas de description
@@ -83,19 +108,12 @@ genererPieces(pieces);
             return piece.description; // On retourne l'élément seulement si y'a une description
         });
         console.log(piecesFiltrees);
+        // Effacement de l'écran et regénération de la page
+  document.querySelector(".fiches").innerHTML = "";
+  genererPieces(piecesFiltrees);
     });
 
-    // Fonction map
-
-    // On veut récupérer uniquement les noms de chaque objet. pour ça on utilise map
-
-    // const noms = Map(function (piece){
-    //     return piece.nom;
-    // });
-
-    // fonction lambda.
-
-    // fait une fonction map mais en plus court
+    // Fonction map qui n'apparait plus quand on utilise un filtre (sauf si on l'inclut dans la fonction genererPieces ?)
 
     const noms = pieces.map(piece => piece.nom);
     // Maintenant on veut retirer le noms des pièces qui ne sont pas abordables. On utilise une boucle pour parcourir tous les noms
@@ -138,10 +156,3 @@ genererPieces(pieces);
             nomPrixElement.innerText = nomsPrix[i]; 
             availableElements.appendChild(nomPrixElement)
         }
-
-        // Efface le contenu de la balise body et donc l’écran
-    document.querySelector(".fiches").innerHTML = ''
-
-    // On refait tout le code d'avant mais en utilisant innerHTML
-
-    
