@@ -1,7 +1,7 @@
 import { ajoutListenersAvis } from "./avis.js";
 
 
-const reponse = await fetch('pieces-autos.json'); //On va chercher le json
+const reponse = await fetch('http://localhost:8081/pieces/'); //On va chercher le json
 const pieces = await reponse.json(); // On créue une constante pieces que l'on associe au résultat renvoyé par le json
 // On peut aussi utiliser const pieces = await fetch("pieces-autos.json").then(pieces => pieces.json());
 
