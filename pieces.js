@@ -1,9 +1,16 @@
-import { ajoutListenersAvis } from "./avis.js";
-
+import { ajoutListenersAvis, ajoutListenerEnvoyerAvis } from "./avis.js";
 
 const reponse = await fetch('http://localhost:8081/pieces/'); //On va chercher le json
 const pieces = await reponse.json(); // On créue une constante pieces que l'on associe au résultat renvoyé par le json
-// On peut aussi utiliser const pieces = await fetch("pieces-autos.json").then(pieces => pieces.json());
+// On peut aussi utiliser const pieces = await fetch("http://localhost:8081/pieces").then(pieces => pieces.json());
+
+// Transformation des pièces en JSON
+const valeurPieces = JSON.stringify(pieces);
+// Stockage des informations dans le localStorage
+window.localStorage.setItem("pieces", valeurPieces);
+
+// on appelle la fonction ajoutListenerEnvoyerAvis pour ajouter le listener au formulaire
+ajoutListenerEnvoyerAvis()
 
 // pour tous les objets, on utilise un for of. On utilise aussi une fonction gernererPieces comme ça on purra la rappeler plusieurs fois pour mettre à jour la page web
 function genererPieces(pieces) {
@@ -45,7 +52,7 @@ function genererPieces(pieces) {
         pieceElement.appendChild(categorieElement);
         pieceElement.appendChild(descriptionElement);
         pieceElement.appendChild(stockElement);
-        //Code aJouté
+        //Code ajouté pour les boutons d'affichage des avis
         pieceElement.appendChild(avisBouton);
     }
     ajoutListenersAvis();
@@ -166,3 +173,4 @@ genererPieces(pieces);
             nomPrixElement.innerText = nomsPrix[i]; 
             availableElements.appendChild(nomPrixElement)
         }
+
