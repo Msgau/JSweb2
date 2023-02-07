@@ -1,14 +1,23 @@
 import { ajoutListenersAvis, ajoutListenerEnvoyerAvis } from "./avis.js";
 
+// Récupération des pièces éventuellement stockées dans le local storage
+let pieces = window.localStorage.getItem('pieces');
+
+// Si il  n'y a rien dans le local storage, on récupère les données dans l'api et on les place dans le local storage
+if(pieces === null){
 const reponse = await fetch('http://localhost:8081/pieces/'); //On va chercher le json
-const pieces = await reponse.json(); // On créue une constante pieces que l'on associe au résultat renvoyé par le json
+pieces = await reponse.json(); // On créue une constante pieces que l'on associe au résultat renvoyé par le json
 // On peut aussi utiliser const pieces = await fetch("http://localhost:8081/pieces").then(pieces => pieces.json());
 
 // Transformation des pièces en JSON
 const valeurPieces = JSON.stringify(pieces);
 // Stockage des informations dans le localStorage
 window.localStorage.setItem("pieces", valeurPieces);
-
+}
+// Si pieces est déjà dans le local storage, on reconstruit les données en mémoire à l'aide le la fonction json.parse
+else{
+    pieces = JSON.parse(pieces);
+}
 // on appelle la fonction ajoutListenerEnvoyerAvis pour ajouter le listener au formulaire
 ajoutListenerEnvoyerAvis()
 
@@ -174,3 +183,8 @@ genererPieces(pieces);
             availableElements.appendChild(nomPrixElement)
         }
 
+// Ajout du listener pour mettre à jour les données du local storage
+const bouttonMettreAJour = document.querySelector(".btn-maj");
+bouttonMettreAJour.addEventListener("click", function(){
+    window.localStorage.removeItem("pieces");
+});
