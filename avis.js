@@ -9,17 +9,23 @@ export function ajoutListenersAvis() { // export sert à rendre la fonction disp
             // La réponse de l’API prend la forme d’une chaîne de caractères au format JSON. Nous devons donc désérialiser ce JSON, cad reconstruire les données décrites par la chaîne de caractères
             // dans la mémoire de l’ordinateur.Pour y parvenir, nous rajoutons un appel à la fonction JSON sur l’objet reponse. Il faut également utiliser le mot clé await, car cette opération est aussi asynchrone
             const avis = await reponse.json();
-            console.log(avis)
+            // On ajoute un appel à la fonction setItem, on calcule le nom de la clé du local storage grâce à l'identifiant de la pièce, puis on convertit les avis reçus en JSON afin de fournir une valeur à cette entrée du local storage
+            window.localStorage.setItem(`avis-piece-${id}`, JSON.stringify(avis))
             // La constante avis contient désormais une liste d’objets de tous les avis pour une pièce en particulier. Il ne nous reste plus qu’à générer des éléments grâce aux fonctions createElement et appendChild :
             const pieceElement = event.target.parentElement;
-
-            const avisElement = document.createElement("p");
-            for (let i = 0; i < avis.length; i++) {
-                avisElement.innerHTML += `${avis[i].utilisateur}: ${avis[i].nbEtoiles} étoiles <br> ${avis[i].commentaire} <br><br>`;
-            }
-            pieceElement.appendChild(avisElement);
+            afficherAvis(pieceElement, avis)
         });
+    }}
+
+// On crée une nouvelle fonction afficherAvis avec les paramètres pieceElement (l'élément du DOM auquel ratacher les balises p) et la liste des avis à ajouter.
+// On déplace le code de génréation des avis qu'on avait écrit au-dessus dans la fonction afficherAvis, et à la place on appelle la fonction. On l'exporte pour pouvoir l'importer dans pieces.js
+
+export function afficherAvis(pieceElement, avis){
+    const avisElement = document.createElement("p");
+    for (let i = 0; i < avis.length; i++) {
+        avisElement.innerHTML += `${avis[i].utilisateur}: ${avis[i].nbEtoiles} étoiles <br> ${avis[i].commentaire} <br><br>`;
     }
+    pieceElement.appendChild(avisElement);
 }
 
 export function ajoutListenerEnvoyerAvis() {

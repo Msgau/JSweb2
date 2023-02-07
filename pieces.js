@@ -1,4 +1,4 @@
-import { ajoutListenersAvis, ajoutListenerEnvoyerAvis } from "./avis.js";
+import { ajoutListenersAvis, ajoutListenerEnvoyerAvis, afficherAvis } from "./avis.js";
 
 // Récupération des pièces éventuellement stockées dans le local storage
 let pieces = window.localStorage.getItem('pieces');
@@ -48,6 +48,7 @@ function genererPieces(pieces) {
         
         // code pour les boutons
         const avisBouton = document.createElement("button");
+        // On ajoute l'attibu dataId grâce à la popriété dataset.id sur la balise article, cela permet de récupérer les éléments parents auxquels ajouter les articles plsu tard
         avisBouton.dataset.id = article.id;
         avisBouton.textContent = "Afficher les avis";
 
@@ -69,6 +70,17 @@ function genererPieces(pieces) {
 // On lance la fonction pour afficher la page
 genererPieces(pieces);
 
+// Utilisation du local storage pour les avis : on écrit une boucle qui parcourt toutes les pièces
+for (let i = 0; i < pieces.length; i++) { 
+    const id=pieces[i].id; // Pour chaque pièce :
+    const avisJSON = window.localStorage.getItem(`avis-pieces-${id}`); // On récupère l'éventuelle valeur stockée dans le local storage
+    const avis = JSON.parse(avisJSON); // On transforme ce qu'on a récupéré en JSON
+
+    if(avis!==null){ // Si cette valeur est présente (pas absente)
+        const pieceElement = document.querySelector(`article[data-id="${id}"]`) // On récupère l'élément parent grâce à l'attibu data.id que l'on a ajouté précédemment.
+        afficherAvis(pieceElement, avis)
+    }
+}
 
     //Trier les articles en fonction du prix du plus petit ua plus grand avec la fonction sort
 
